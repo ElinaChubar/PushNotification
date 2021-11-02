@@ -35,13 +35,24 @@
                 <configuration>
                     <testResultsTimestamp>false</testResultsTimestamp>
                     <propertiesUser>
-                        <Threadcount>${Threadcount}</Threadcount>
-                        <Loopcount>${Loopcount}</Loopcount>
-                        <Rampup>${RampUp}</Rampup>
+                        <Threadcount_CreateCSVfile>${Threadcount_CreateCSVfile}</Threadcount_CreateCSVfile>
+                        <Loopcount_CreateCSVfile>${Loopcount_CreateCSVfile}</Loopcount_CreateCSVfile>
+                        <Rampup_CreateCSVfile>${RampUp_CreateCSVfile}</Rampup_CreateCSVfile>
+                        <Threadcount_CreateUser>${Threadcount_CreateUser}</Threadcount_CreateUser>
+                        <Loopcount_CreateUser>${Loopcount_CreateUser}</Loopcount_CreateUser>
+                        <Rampup_CreateUser>${Rampup_CreateUser}</Rampup_CreateUser>
+                        <Threadcount_CreateNotifications>${Threadcount_CreateNotifications}</Threadcount_CreateNotifications>
+                        <Loopcount_CreateNotifications>${Loopcount_CreateNotifications}</Loopcount_CreateNotifications>
+                        <Rampup_CreateNotifications>${Rampup_CreateNotifications}</Rampup_CreateNotifications>
+                        <Threadcount_getMessage>${Threadcount_getMessage}</Threadcount_getMessage>
+                        <Loopcount_getMessage>${Loopcount_getMessage}</Loopcount_getMessage>
+                        <Rampup_getMessage>${Rampup_getMessage}</Rampup_getMessage>
+                        <Threadcount_removeToken>${Threadcount_removeToken}</Threadcount_removeToken>
+                        <Loopcount_removeToken>${Loopcount_removeToken}</Loopcount_removeToken>
+                        <Rampup_removeToken>${Rampup_removeToken}</Rampup_removeToken>
                     </propertiesUser>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
 </project>

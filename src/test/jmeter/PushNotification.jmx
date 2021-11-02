@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.4.1">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Push Notifications" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.serialize_threadgroups">true</boolProp>
@@ -11,14 +11,44 @@
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
     </TestPlan>
     <hashTree>
+      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="Create CSV file" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">${__P(Loopcount_CreateCSVfile,1)}</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(Threadcount_CreateCSVfile,1)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__P(RampUp_CreateCSVfile,1)}</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </SetupThreadGroup>
+      <hashTree>
+        <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="BeanShell Sampler" enabled="true">
+          <stringProp name="BeanShellSampler.query">import org.apache.jmeter.services.FileServer;
+
+  File file = new File(&quot;C:\\Users\\user\\Desktop\\Файлы установки\\apache-jmeter-5.4.1\\apache-jmeter-5.4.1\\bin\\users.csv&quot;);
+  file.createNewFile();
+ 
+PrintWriter writer = new PrintWriter(&quot;C:\\Users\\user\\Desktop\\Файлы установки\\apache-jmeter-5.4.1\\apache-jmeter-5.4.1\\bin\\users.csv&quot;, &quot;UTF-8&quot;);
+writer.println(&quot;CRMid, HashCustomer, Token&quot;);
+writer.close();
+</stringProp>
+          <stringProp name="BeanShellSampler.filename"></stringProp>
+          <stringProp name="BeanShellSampler.parameters"></stringProp>
+          <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+        </BeanShellSampler>
+        <hashTree/>
+      </hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Create User (167)" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__P(Loopcount,1)}</stringProp>
+          <stringProp name="LoopController.loops">${__P(Loopcount_CreateUser,1)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__P(Threadcount,1)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__P(RampUp,0.62)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(Threadcount_CreateUser,5)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__P(Rampup_CreateUser,31)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -185,12 +215,15 @@
             </ResponseAssertion>
             <hashTree/>
             <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="BeanShell PostProcessor" enabled="true">
-              <stringProp name="filename"></stringProp>
-              <stringProp name="parameters"></stringProp>
               <boolProp name="resetInterpreter">false</boolProp>
-              <stringProp name="script">${__setProperty(var_crmid, ${CRMid})};
-${__setProperty(var_hash, ${HashCustomer})};
-${__setProperty(var_token, ${Token})};</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="script">FileWriter fstream = new FileWriter(&quot;users.csv&quot;,true);
+BufferedWriter out = new BufferedWriter(fstream);
+out.write(vars.get(&quot;CRMid&quot;) + &quot;,&quot; + vars.get(&quot;HashCustomer&quot;) + &quot;,&quot; + vars.get(&quot;Token&quot;));
+out.write(System.getProperty(&quot;line.separator&quot;));
+out.close();
+fstream.close();</stringProp>
             </BeanShellPostProcessor>
             <hashTree/>
           </hashTree>
@@ -311,16 +344,28 @@ ${__setProperty(var_token, ${Token})};</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__P(Loopcount,1)}</stringProp>
+          <stringProp name="LoopController.loops">${__P(Loopcount_CreateNotifications,5)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__P(Threadcount,60)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__P(RampUp,81)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(Threadcount_CreateNotifications,50)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__P(Rampup_CreateNotifications,68)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+          <stringProp name="delimiter">,</stringProp>
+          <stringProp name="fileEncoding"></stringProp>
+          <stringProp name="filename">C:\\Users\\user\\Desktop\\Файлы установки\\apache-jmeter-5.4.1\\apache-jmeter-5.4.1\\bin\\users.csv</stringProp>
+          <boolProp name="ignoreFirstLine">true</boolProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="variableNames">CRMid,HashCustomer,Token</stringProp>
+        </CSVDataSet>
+        <hashTree/>
         <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
           <collectionProp name="HeaderManager.headers">
             <elementProp name="" elementType="Header">
@@ -447,7 +492,7 @@ ${__setProperty(var_token, ${Token})};</stringProp>
   &quot;msgText&quot;: &quot;${msgText}&quot;,&#xd;
   &quot;timePublish&quot;: 1629983113,&#xd;
   &quot;timeExpiration&quot;: 1791881788,&#xd;
-  &quot;customers&quot;: [&quot;${__property(var_crmid)}&quot;],&#xd;
+  &quot;customers&quot;: [&quot;${CRMid}&quot;],&#xd;
   &quot;typeParams&quot;: &quot;TEXT&quot;,&#xd;
   &quot;bodyParams&quot;: &quot;{\&quot;params\&quot;:\&quot;text\&quot;}&quot;,&#xd;
   &quot;appName&quot;: &quot;UATxCriticalMaximarkets&quot;,&#xd;
@@ -508,7 +553,7 @@ ${__setProperty(var_token, ${Token})};</stringProp>
   &quot;msgText&quot;: &quot;${msgText}&quot;,&#xd;
   &quot;timePublish&quot;: 1629983113,&#xd;
   &quot;timeExpiration&quot;: 1791881788,&#xd;
-  &quot;customers&quot;: [&quot;${__property(var_hash)}&quot;],&#xd;
+  &quot;customers&quot;: [&quot;${HashCustomer}&quot;],&#xd;
   &quot;typeParams&quot;: &quot;Deposit&quot;,&#xd;
   &quot;bodyParams&quot;: &quot;{\&quot;float?\&quot;:null}&quot;,&#xd;
   &quot;appName&quot;: &quot;UATxCriticalMaximarkets&quot;,&#xd;
@@ -744,16 +789,28 @@ IsSendToIos: true&#xd;
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__P(Loopcount,1)}</stringProp>
+          <stringProp name="LoopController.loops">${__P(Loopcount_getMessage,5)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__P(Threadcount,11)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__P(RampUp,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(Threadcount_getMessage,22)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__P(Rampup_getMessage,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+          <stringProp name="delimiter">,</stringProp>
+          <stringProp name="fileEncoding"></stringProp>
+          <stringProp name="filename">C:\\Users\\user\\Desktop\\Файлы установки\\apache-jmeter-5.4.1\\apache-jmeter-5.4.1\\bin\\users.csv</stringProp>
+          <boolProp name="ignoreFirstLine">true</boolProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="variableNames">CRMid,HashCustomer,Token</stringProp>
+        </CSVDataSet>
+        <hashTree/>
         <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
           <collectionProp name="HeaderManager.headers">
             <elementProp name="" elementType="Header">
@@ -860,11 +917,11 @@ IsSendToIos: true&#xd;
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header getMessages" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Authorization</stringProp>
-                <stringProp name="Header.value">Basic { &quot;HashCustomer&quot;:&quot;${__property(var_hash)}&quot;, &quot;AppName&quot;:&quot;UATxCriticalMaximarkets&quot; }</stringProp>
+                <stringProp name="Header.value">Basic { &quot;HashCustomer&quot;:&quot;${HashCustomer}&quot;, &quot;AppName&quot;:&quot;UATxCriticalMaximarkets&quot; }</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -1070,16 +1127,28 @@ IsSendToIos: true&#xd;
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__P(Loopcount,1)}</stringProp>
+          <stringProp name="LoopController.loops">${__P(Loopcount_removeToken,5)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__P(Threadcount,1)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__P(RampUp,9)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(Threadcount_removeToken,1)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__P(Rampup_removeToken,9)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+          <stringProp name="delimiter">,</stringProp>
+          <stringProp name="fileEncoding"></stringProp>
+          <stringProp name="filename">C:\\Users\\user\\Desktop\\Файлы установки\\apache-jmeter-5.4.1\\apache-jmeter-5.4.1\\bin\\users.csv</stringProp>
+          <boolProp name="ignoreFirstLine">true</boolProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="variableNames">CRMid,HashCustomer,Token</stringProp>
+        </CSVDataSet>
+        <hashTree/>
         <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
           <collectionProp name="HeaderManager.headers">
             <elementProp name="" elementType="Header">
@@ -1186,11 +1255,11 @@ IsSendToIos: true&#xd;
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header remove token" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Authorization</stringProp>
-                <stringProp name="Header.value">Basic { &quot;HashCustomer&quot;:&quot;${__property(var_hash)}&quot;, &quot;AppName&quot;:&quot;UATxCriticalMaximarkets&quot; }</stringProp>
+                <stringProp name="Header.value">Basic { &quot;HashCustomer&quot;:&quot;${HashCustomer}&quot;, &quot;AppName&quot;:&quot;UATxCriticalMaximarkets&quot; }</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -1202,7 +1271,7 @@ IsSendToIos: true&#xd;
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
-  &quot;token&quot;: &quot;${__property(var_token)}&quot;&#xd;
+  &quot;token&quot;: &quot;${Token}&quot;&#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
