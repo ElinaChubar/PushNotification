@@ -28,10 +28,10 @@
         <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="BeanShell Sampler" enabled="true">
           <stringProp name="BeanShellSampler.query">import org.apache.jmeter.services.FileServer;
 
-  File file = new File(&quot;C:\\Users\\user\\Desktop\\Файлы установки\\apache-jmeter-5.4.1\\apache-jmeter-5.4.1\\bin\\users.csv&quot;);
+  File file = new File(&quot;C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/PushNotification/target/jmeter/results/users.csv&quot;);
   file.createNewFile();
  
-PrintWriter writer = new PrintWriter(&quot;C:\\Users\\user\\Desktop\\Файлы установки\\apache-jmeter-5.4.1\\apache-jmeter-5.4.1\\bin\\users.csv&quot;, &quot;UTF-8&quot;);
+PrintWriter writer = new PrintWriter(&quot;C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/PushNotification/target/jmeter/results/users.csv&quot;, &quot;UTF-8&quot;);
 writer.println(&quot;CRMid, HashCustomer, Token&quot;);
 writer.close();
 </stringProp>
